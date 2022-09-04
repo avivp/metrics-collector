@@ -1,0 +1,25 @@
+# docker-compose up -d
+# docker-compose down
+version: "3"
+services:
+  producer:
+    container_name: producer
+    build:
+      context: ./
+      dockerfile: ./src/producer/Dockerfile
+    environment: 
+      SSL_CAFILE_PATH: path1
+      SSL_CERTFILE_PATH: path2
+      SSL_KEYFILE_PATH: path3
+
+  consumer:
+    container_name: consumer
+    build:
+      context: ./
+      dockerfile: ./src/consumer/Dockerfile
+    environment:
+      SSL_CAFILE_PATH: path1
+      SSL_CERTFILE_PATH: path2
+      SSL_KEYFILE_PATH: path3
+      DB_USER: usr
+      DB_PASSWORD: pwd
