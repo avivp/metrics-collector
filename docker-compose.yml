@@ -7,10 +7,10 @@ services:
     build:
       context: ./
       dockerfile: ./src/producer/Dockerfile
-    environment: 
-      SSL_CAFILE_PATH: path1
-      SSL_CERTFILE_PATH: path2
-      SSL_KEYFILE_PATH: path3
+    environment:
+      SSL_CAFILE_PATH: ${SSL_CAFILE_PATH}
+      SSL_CERTFILE_PATH: ${SSL_CERTFILE_PATH}
+      SSL_KEYFILE_PATH: ${SSL_KEYFILE_PATH}
 
   consumer:
     container_name: consumer
@@ -18,8 +18,8 @@ services:
       context: ./
       dockerfile: ./src/consumer/Dockerfile
     environment:
-      SSL_CAFILE_PATH: path1
-      SSL_CERTFILE_PATH: path2
-      SSL_KEYFILE_PATH: path3
-      DB_USER: usr
-      DB_PASSWORD: pwd
+      SSL_CAFILE_PATH: ${SSL_CAFILE_PATH}
+      SSL_CERTFILE_PATH: ${SSL_CERTFILE_PATH}
+      SSL_KEYFILE_PATH: ${SSL_KEYFILE_PATH}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}

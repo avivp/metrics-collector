@@ -21,16 +21,13 @@ set up environment variables for secretive data
 > export SSL_KEYFILE_PATH=path
 
 
-setup environment is only required once (but can be executed as many times)
-> run from root folder: python ./src/deployment/env_setup.py
+setup environment is only required once (but can be executed many times)
+This will install packages and setup the database:
+> run from root folder:  bash initial_setup.sh 
 
 
 ### How to run using python
 python assuming python3
-
-> pip install -r src/producer/requirements.txt
-
-> pip install -r src/consumer/requirements.txt
 
 > python src/producer/main.py
 
