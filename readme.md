@@ -2,7 +2,7 @@
 ## website monitor
 System which monitors website availability over the network and produces metrics.
 
-### setup
+### Setup
 > make sure your postgresql service has a table called ANALYTICS
 
 > make sure your kafka service has topic called 'test'
@@ -34,24 +34,49 @@ python assuming python3
 > python src/consumer/main.py
 
 
+### How to run using docker compose
+In root directory create a ".env" file with the following env vars and secrative values:
+> DB_USER=
+
+> DB_PASSWORD=
+
+> SSL_CAFILE_PATH=
+
+> SSL_CERTFILE_PATH=
+
+> SSL_KEYFILE_PATH=
+
+> LOCAL_PATH=
+
+> APP_PATH=
+
+LOCAL_PATH and APP_PATH are for mounting host working directory to the app's so the container knows where to look for ssl files. In macOS you can use LOCAL_PATH=/Users and APP_PATH=/Users
+
+
+To start docker compose:
+> docker-compose up -d
+
+To stop docker compose
+> docker-compose down
+
+
 ### How to run using docker
 from root folder run:
 > docker build -f src/producer/Dockerfile -t <producer_img_name> .
 
 > docker run -d -e SSL_CAFILE_PATH="path" -e SSL_CERTFILE_PATH="path" -e SSL_KEYFILE_PATH="path"
-    -v /<path without file name>:/<path without file name> <producer_img_name>
+    -v /host-directory:/app-directory <producer_img_name>
 
-
-> > for mac use -v /Users:/Users
 
 > docker build -f src/consumer/Dockerfile -t <consumer_img_name> .
 
 > docker run -d -e SSL_CAFILE_PATH="path" -e SSL_CERTFILE_PATH="path" -e SSL_KEYFILE_PATH="path"
     -e DB_USER="some_key_id" -e DB_PASSWORD="some_secret"
-    -v /<path without file name>:/<path without file name> <consumer_img_name>
+    -v /host-directory:/app-directory <consumer_img_name>
 
 
-> > for mac use -v /Users:/Users
+Mounting host working directory to the app's to indicate the physical location of ssl files:
+> > for macOS use -v /Users:/Users
 
 
 ### How to run unit tests

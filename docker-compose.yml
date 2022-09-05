@@ -7,19 +7,17 @@ services:
     build:
       context: ./
       dockerfile: ./src/producer/Dockerfile
-    environment:
-      SSL_CAFILE_PATH: ${SSL_CAFILE_PATH}
-      SSL_CERTFILE_PATH: ${SSL_CERTFILE_PATH}
-      SSL_KEYFILE_PATH: ${SSL_KEYFILE_PATH}
+    env_file:
+      - .env
+    volumes:
+      - $LOCAL_PATH:$APP_PATH
 
   consumer:
     container_name: consumer
     build:
       context: ./
       dockerfile: ./src/consumer/Dockerfile
-    environment:
-      SSL_CAFILE_PATH: ${SSL_CAFILE_PATH}
-      SSL_CERTFILE_PATH: ${SSL_CERTFILE_PATH}
-      SSL_KEYFILE_PATH: ${SSL_KEYFILE_PATH}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
+    env_file:
+      - .env
+    volumes:
+      - $LOCAL_PATH:$APP_PATH
