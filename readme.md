@@ -86,11 +86,13 @@ Also, URL should be removed from list of websites, since it is invalid there is 
 2) are www.hbo.com, http://hbo.com, hbo.com/en_fi are all the same ? I decided to normalize them all to hbo.com
 3) should we publish metrics in case of error in pinging the website (e.g. timeout)? network errors dont really indicate metrics about the website hence i skip those.
 
+
 ## Design thoughts:
-1) Which storage should we use relational DB or NOSQL?  how much data is expected to be stored? as postgresql is not known for scaling.
-Also is there data retention policy (in which we could clear some storage).
+1) Which storage should we use: relational DB or NOSQL? maybe time based DB?  how much data is expected to be stored? as postgresql is not known for scaling.
+Also is there data retention policy (in which we could clear some storage) and how are metrics will be queried and use (e.g. required index). Those points can impact the storage we choose.
 2) Scaling - scaling a service by using threads, and scaling the system by adding nodes. That means both for services and DB connections.
 3) Consider the optimal way to handle duplicated msgs on kafka stream which in turn might create duplicated metrics.
+(duplicated metrics should be easy to detect using resource name and time created)
 
 
 
