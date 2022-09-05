@@ -9,6 +9,7 @@ class MockHttpResponse:
     def __init__(self):
         self.elapsed = timedelta(milliseconds=43)
         self.status_code = 200
+        self.text = ''
 
 
 def test_write_msg(monkeypatch, mq_client):
