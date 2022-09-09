@@ -78,13 +78,14 @@ class KafkaConsumerClient(KafkaClient):
         # keeping connection with kafka open
         self._consumer = KafkaConsumer(
             bootstrap_servers=self._host,
-            auto_offset_reset='latest',
+            auto_offset_reset='earliest',  # reconsume data from last commit
             group_id=GROUP_ID,
             security_protocol="SSL",
             ssl_cafile=self._ssl_cafile,
             ssl_certfile=self._ssl_certfile,
             ssl_keyfile=self._ssl_keyfile,
-            consumer_timeout_ms=self._timeout
+            consumer_timeout_ms=self._timeout,
+            enable_auto_commit=False    # we would like to only commit after msg was fully processed
         )
 
         self._consumer.subscribe([self._topic_name])
@@ -97,5 +98,8 @@ class KafkaConsumerClient(KafkaClient):
         list = []
         for message in self._consumer:
             list.append(message.value.decode('utf-8'))
-        self._consumer.commit()
         return list
+
+    def commit_messages(self):
+        self._consumer.commit()
+

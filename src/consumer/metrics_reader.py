@@ -34,6 +34,7 @@ class MetricsReader(object):
                     logger.exception(f'[Wrong type of message was sent and will not be processed]')
             # self._storage_client.store_metrics(list)
             self._resource_handlers[0].store_metrics(list)
+            self._queue_client.commit_messages()  # msgs were processed and can be ack as such
 
         except Exception:
             logger.exception(f'[Unexpected error occurred]')

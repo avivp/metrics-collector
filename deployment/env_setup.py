@@ -29,8 +29,9 @@ if __name__ == '__main__':
         db_client.create_db(DB_NAME)
         db_client = PostgresqlClient(config.db_host, config.db_port, config.db_user, config.db_password, DB_NAME)
         db_client.execute(create_tbl_type)
-        db_client.execute(create_tbl_metrics)  # will fail and do nothing if same key already exits so setup can be executed several times
-        db_client.execute(insert_tbl_types)
+        db_client.execute(create_tbl_metrics)
+        db_client.execute(insert_tbl_types)  # will fail and do nothing if same key already exits so setup can be executed several times
+
 
         # if kafka topic doesnt exist - create it
         kafka_client = KafkaClient(config.mq_host, config.mq_port, config.mq_api_version, config.mq_topic_name,
