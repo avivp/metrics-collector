@@ -41,14 +41,16 @@ class PostgresqlClient(object):
     # The idea is to retry execute the command in case of transient error (as some errors are valid and shouldnt be retried).
     @retry(stop=stop_after_attempt(2), wait=wait_exponential(),
            retry=retry_if_exception(psycopg2.OperationalError))
-    def execute(self, command: str):
-        # TODO: add support for parameters to prevent SQL injection
+    def execute(self, command: str, *args):
         try:
             # this always run within transaction
             with psycopg2.connect(self.__get_connection_url()) as conn:
                 # connection is only established when there's an action to minimize the time the connection is open
                 with conn.cursor() as cursor:
-                    cursor.execute(command)
+                    if len(args) > 0:
+                        cursor.executemany(command, args)  # use parameters to prevent SQL injection
+                    else:
+                        cursor.execute(command)
 
         except psycopg2.Error as e:
             # not logging the command in case it has sensitive data

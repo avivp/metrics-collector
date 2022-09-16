@@ -1,6 +1,7 @@
 from common.metrics import Metrics
 from enum import Enum
 import logging
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +26,8 @@ class ResourceStorageHandler(object):
 # =========================
 class WebsiteSqlHandler(ResourceStorageHandler):
     INSERT_SQL = f"INSERT INTO {TABLE_NAME} " \
-                 f"(RESOURCE_NAME, RESOURCE_TYPE, RESPONSE_TIME, STATUS_CODE, CONTENT, CREATED_TIME_UTC) "
+                 f"(RESOURCE_NAME, RESOURCE_TYPE, RESPONSE_TIME, STATUS_CODE, CONTENT, CREATED_TIME_UTC) " \
+                 f"VALUES (%s, %s, %s, %s, %s, %s)"
 
     def __init__(self, db_client):
         super().__init__(db_client)
@@ -36,10 +38,8 @@ class WebsiteSqlHandler(ResourceStorageHandler):
         # should return a list of the failed ones to attempt retries.
         for item in list:
             try:
-                content = f"'{item.content}'" if item.content else "NULL "
-                command = f"{self.INSERT_SQL} VALUES('{item.resource_name}', {ResourceType[item.resource_type].value}, " \
-                          f"{item.response_time}, {item.status_code}, {content}, " \
-                          f"TO_TIMESTAMP('{item.create_time_utc}', 'YYYY-MM-DD HH24:MI')) "
-                self._db_client.execute(command)
+                args = (item.resource_name, ResourceType[item.resource_type].value, item.response_time,
+                        item.status_code, item.content, datetime.strptime(item.create_time_utc, '%Y-%m-%d %H:%M:%S.%f+00:00'))
+                self._db_client.execute(self.INSERT_SQL, args)
             except Exception:
                 logger.exception(f'[Error adding record to DB] resource:{item.resource_name}')

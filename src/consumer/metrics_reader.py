@@ -19,7 +19,6 @@ class MetricsReader(object):
         self._queue_client = queue_client
         self._db_client = db_client
         self._resource_handlers = [WebsiteSqlHandler(self._db_client)]  # can extend to other metrics types
-        service_config = Configuration()
 
     def read(self):
         try:
@@ -32,7 +31,6 @@ class MetricsReader(object):
                     list.append(json.loads(msg, object_hook=WebsiteMetrics.from_json))
                 except TypeError:
                     logger.exception(f'[Wrong type of message was sent and will not be processed]')
-            # self._storage_client.store_metrics(list)
             self._resource_handlers[0].store_metrics(list)
             self._queue_client.commit_messages()  # msgs were processed and can be ack as such
 
